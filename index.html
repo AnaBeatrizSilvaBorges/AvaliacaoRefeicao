@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Avaliação do Prato</title>
+
+<style>
+    * { box-sizing: border-box; }
+
+    body {
+        font-family: Arial, sans-serif;
+        background: #fff;
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .container {
+        text-align: center;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    h2 {
+        font-size: 36px;
+        margin-bottom: 50px;
+    }
+
+    .avaliacao {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+    }
+
+    .opcao {
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .opcao:hover {
+        transform: scale(1.15);
+    }
+
+    .emoji {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 64px;
+        color: #fff;
+        margin-bottom: 12px;
+    }
+
+    .ruim { background: #e53935; }
+    .meh1 { background: #fb8c00; }
+    .meh2 { background: #fbc02d; }
+    .bom  { background: #43a047; }
+    .otimo{ background: #2e7d32; }
+
+    .votos {
+        font-size: 18px;
+        color: #555;
+    }
+
+    /* LOGO */
+    .logo {
+        text-align: center;
+        padding: 20px 0;
+    }
+
+    .logo img {
+        max-width: 220px;
+        width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>
+        Estamos apresentando novos pratos e queremos saber sua opinião.
+        Avalie com a carinha que melhor representa o que você achou do bolinho de abóbora.
+    </h2>
+
+    <div class="avaliacao">
+        <div class="opcao" onclick="votar(0)">
+            <div class="emoji ruim">😵</div>
+            <div class="votos" id="voto0">0 votos</div>
+        </div>
+
+        <div class="opcao" onclick="votar(1)">
+            <div class="emoji meh1">☹️</div>
+            <div class="votos" id="voto1">0 votos</div>
+        </div>
+
+        <div class="opcao" onclick="votar(2)">
+            <div class="emoji meh2">😐</div>
+            <div class="votos" id="voto2">0 votos</div>
+        </div>
+
+        <div class="opcao" onclick="votar(3)">
+            <div class="emoji bom">🙂</div>
+            <div class="votos" id="voto3">0 votos</div>
+        </div>
+
+        <div class="opcao" onclick="votar(4)">
+            <div class="emoji otimo">😁</div>
+            <div class="votos" id="voto4">0 votos</div>
+        </div>
+    </div>
+</div>
+
+<!-- LOGO NO FINAL DA TELA -->
+<div class="logo">
+    <img src="img.jpg" alt="Logo" onclick="cliqueLogo()">
+</div>
+
+<script>
+    let votos = JSON.parse(localStorage.getItem("votosPrato")) || [0, 0, 0, 0, 0];
+
+    function atualizarTela() {
+        votos.forEach((qtde, i) => {
+            document.getElementById("voto" + i).innerText =
+                qtde + " votos";
+        });
+    }
+
+    atualizarTela();
+
+    function votar(indice) {
+        votos[indice]++;
+        localStorage.setItem("votosPrato", JSON.stringify(votos));
+        atualizarTela();
+    }
+
+    /* ===== RESET SECRETO NO LOGO ===== */
+    let cliquesLogo = 0;
+
+    function cliqueLogo() {
+        cliquesLogo++;
+
+        if (cliquesLogo === 5) {
+            cliquesLogo = 0;
+
+            if (confirm("Tem certeza que deseja zerar os votos?")) {
+                votos = [0, 0, 0, 0, 0];
+                localStorage.setItem("votosPrato", JSON.stringify(votos));
+                atualizarTela();
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
